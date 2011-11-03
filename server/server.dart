@@ -26,30 +26,22 @@ void main() {
       String output = '{"forename":"${fname}","surname":"${sname}","serverMessage":"${message}"}'; 
       res.write(output);
       print("Sent Data ${output}");
+      
     }
     else {
       res.write("POST only please");
     }
     
+    //close the response
     res.finish();
   });
+  
+  
   server.listen(9090);
   print("listening on port 9090");
   
   // Runs the message loop.
   Fling.goForth();
   
-  
-
-}
-
-
-
-
-
-class AppServer {
-
-
-
 }
 
