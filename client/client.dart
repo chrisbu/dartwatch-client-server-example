@@ -34,7 +34,7 @@ void main() {
 
 }
 
-String sayHelloFromServer(String forename, String surname, callback) {
+void sayHelloFromServer(String forename, String surname, callback) {
     XMLHttpRequest req = new XMLHttpRequest();
     String url = "http://localhost:9090/app/greet";
     req.open("POST",url,false);
