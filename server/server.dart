@@ -1,6 +1,7 @@
 #library("myserver");
 
 #import("dart:json");
+//note - please edit the following path for your machine!
 #import("/home/chrisbu/dart-devel/dart/client/fling/fling.dart");
 
 void main() {
