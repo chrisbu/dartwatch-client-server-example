@@ -4,6 +4,8 @@
 #import("dart:json");
 #import("dart:core");
 
+#source("../shared/message.dart");
+
 
 void main() {
   InputElement forename = document.createElement("input");
@@ -22,10 +24,18 @@ void main() {
   submit.text = "Submit";
   submit.on.click.add((event) {
     //the event handler function
-    sayHelloFromServer(forename.value, surname.value, (String messageText) {
-      //the callback function
-      output.innerHTML += messageText + "<br/>";  
-    });
+	
+	Message message = new Message();
+	message.forename = forename.value; //from the text box
+	message.surname = surname.value; //from the text box
+	message.someNumber = 99;
+	
+    sayHelloFromServer(message, 
+	  (Message response) {
+        //the callback function
+        output.innerHTML += response.greeting() + "<br/>";  
+      }
+	);
     
   });
   
@@ -34,7 +44,7 @@ void main() {
 
 }
 
-void sayHelloFromServer(String forename, String surname, callback) {
+void sayHelloFromServer(Message message, callback) {
     XMLHttpRequest req = new XMLHttpRequest();
     String url = "http://localhost:9090/app/greet";
     req.open("POST",url,false);
@@ -43,15 +53,17 @@ void sayHelloFromServer(String forename, String surname, callback) {
       window.console.log("response recieved");
       String json = req.responseText;
       window.console.log(json);
-      Map<String,String> result = JSON.parse(json);
-      String serverMessage = result['serverMessage'];
-      String messageText = "${serverMessage} ${result['forename']} ${result['surname']}";
-      window.console.log("calling callback");
-      callback(messageText);
+	  Message message = new Message.fromJson(json);
+      callback(message);
     });
     
-    String data = '{"forename":"${forename}","surname":"${surname}"}';
+    String data = message.toJson();
     window.console.log("sending data to server: ${data}");
-    req.send(data);
+	try {
+      req.send(data);
+	}
+	catch (Exception ex) {
+	  window.console.log(ex.toString());
+	}
   
 }

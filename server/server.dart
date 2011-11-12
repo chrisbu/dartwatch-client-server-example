@@ -1,8 +1,11 @@
 #library("myserver");
 
 #import("dart:json");
+
 //note - please edit the following path for your machine!
 #import("/home/chrisbu/dart-devel/dart/client/fling/fling.dart");
+
+#source("../shared/message.dart");
 
 void main() {
   HttpServer server = new HttpServer();
@@ -17,15 +20,13 @@ void main() {
     if (req.method == "POST") {
     
       print("Received data: ${req.body}");
-      Map<String,String> input = JSON.parse(req.body);
-      String fname = input['forename'];
-      String sname = input['surname'];
-      print("Parsed data: ${fname} ${sname}");  
-      String message = "Server says, Hi there";
+	  Message message = new Message.fromJson(req.body);
+      print("Parsed data: ${message.forename} ${message.surname} ${message.someNumber}");
+	  message.messageText = "Server says, Hi there"; //add the message text
       
-      String output = '{"forename":"${fname}","surname":"${sname}","serverMessage":"${message}"}'; 
-      res.write(output);
-      print("Sent Data ${output}");
+	  String output = message.toJson();
+	  res.write(output);
+	  print("Sent Data ${output}");
       
     }
     else {
